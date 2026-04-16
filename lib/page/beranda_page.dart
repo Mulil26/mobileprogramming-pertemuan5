@@ -12,9 +12,11 @@ class BerandaPage extends StatefulWidget {
 }
 
 class _BerandaPage extends State<BerandaPage> {
-  List<Widget> _page = [BerandaPage(onAddJob: (_) {}), ProfilePage(jobs: const[],onDelete: (_){},onRespond:(_){})];
+  List<Widget> _page = [BerandaPage(onAddJob: (_) {}), ProfilePage(jobs: [],onDelete: (_){},onRespond:(_){})];
 
-  final TextEditingController _controller = TextEditingController();
+  late final posisiController = TextEditingController();
+  final perusahaanController = TextEditingController();
+  final masaController = TextEditingController();
 
   int currentPage = 0;
 
@@ -29,23 +31,41 @@ class _BerandaPage extends State<BerandaPage> {
         child: Column(
           children: [
             SizedBox(height: 10),
-
             Padding(
               padding: const EdgeInsets.all(16),
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  labelText: "Masukkan pekerjaan Anda",
+              child:Column( children: [
+              TextField(
+                controller: posisiController,
+                decoration:  InputDecoration(
+                  labelText: "Masukkan Posisi Anda",
                   border: OutlineInputBorder(),
                 ),
               ),
+                SizedBox(height: 10),
+                TextField(
+                controller: perusahaanController,
+                decoration:  InputDecoration(
+                  labelText: "Masukkan Perusahaan Anda",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+                SizedBox(height: 10),
+                TextField(
+                controller: masaController,
+                decoration:  InputDecoration(
+                  labelText: "Masukkan Masa Jabatan Anda",
+                  border: OutlineInputBorder(),
+                ),
+              ),],)
             ),
 
             const SizedBox(height: 20),
             // Submit Button
             InkWell(
               onTap: () {
-                if (_controller.text.isNotEmpty) {
+                if (posisiController.text.isNotEmpty &&
+                    perusahaanController.text.isNotEmpty &&
+                    masaController.text.isNotEmpty) {
                   SimpleAlertDialog.show(
                     context,
                     assetImagepath: AnimatedImage.confirm,
@@ -54,13 +74,23 @@ class _BerandaPage extends State<BerandaPage> {
                     content: AlertContentText(
                         "Apakah kamu ingin menambahkan data"),
                     onConfirmButtonPressed: (ctx) {
-                      widget.onAddJob(_controller.text);
+
+                      widget.onAddJob(
+                          "${posisiController.text} - "
+                          "${perusahaanController.text} - "
+                          "${masaController.text}"
+                      );
+
                       CherryToast.success(
                         inheritThemeColors: true,
                         title: Text("Berhasil menambahkan data!"),
                         borderRadius: 0,
                       ).show(context);
-                      _controller.clear();
+
+                      posisiController.clear();
+                      perusahaanController.clear();
+                      masaController.clear();
+
                       Navigator.pop(context);
                     },
                   );
